@@ -1,8 +1,16 @@
 # xiaohongshu-x-planet
 
-An OpenClaw skill for running the **X/Twitter → structured data → Xiaohongshu draft → dashboard** workflow.
+OpenClaw skill for the **X/Twitter → structured data → Xiaohongshu draft → dashboard** workflow.
 
-## What it does
+This repository is the **skill / runbook layer**.
+It defines how an agent should operate the workflow, verify results, and hand off to the implementation project.
+
+## Repositories
+
+- **Skill repo:** `https://github.com/xiangbaqiu/xiaohongshu-x-planet`
+- **Implementation repo:** `https://github.com/xiangbaqiu/xiaohongshu-yunying-laizi-x-xingqiu`
+
+## What this skill covers
 
 - Collect one or more X accounts
 - Keep the latest N posts per account with `replace_latest` dedupe
@@ -11,9 +19,11 @@ An OpenClaw skill for running the **X/Twitter → structured data → Xiaohongsh
 - Show generated drafts inside the dashboard
 - Maintain the full X → normalized posts → note draft → dashboard pipeline
 
-## Skill entry
+## What's inside this repo
 
-See [SKILL.md](./SKILL.md).
+- `SKILL.md` — main skill definition
+- `references/project-map.md` — command map and data contract notes
+- `references/ops-rules.md` — operating conventions and safe change order
 
 ## Implementation project used by this skill
 
@@ -54,11 +64,11 @@ Then open:
 
 `http://127.0.0.1:8008/dashboard/index.html`
 
-## Included references
-
-- `references/project-map.md`
-- `references/ops-rules.md`
-
 ## Notes
 
-This repository contains the **skill definition and operator references**. It does **not** include the full implementation project unless you copy or publish that separately.
+This repository intentionally stays lightweight.
+It contains the **skill definition and operator references**, not the full implementation project.
+
+## License
+
+MIT
