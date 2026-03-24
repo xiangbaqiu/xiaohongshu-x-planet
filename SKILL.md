@@ -3,9 +3,10 @@ name: xiaohongshu-x-planet
 description: Run the "小红书运营来自 X 星球" workflow as a gstack-style command runbook. Use when the user wants to: (1) collect one or more X/Twitter accounts, (2) keep the latest N posts per account with replace-latest dedupe, (3) rebuild or inspect the local operations dashboard, (4) generate a Xiaohongshu note draft from a bundle of multiple X posts, (5) show generated drafts inside the dashboard, or (6) maintain the full X → structured data → note draft → dashboard pipeline.
 ---
 
-Use the project at:
+Use the implementation project at:
 
-`/Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu`
+- GitHub: `https://github.com/xiangbaqiu/xiaohongshu-yunying-laizi-x-xingqiu`
+- Local default path: `/Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu`
 
 # Runbook
 

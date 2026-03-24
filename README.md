@@ -15,9 +15,10 @@ An OpenClaw skill for running the **X/Twitter → structured data → Xiaohongsh
 
 See [SKILL.md](./SKILL.md).
 
-## Project root used by this skill
+## Implementation project used by this skill
 
-`/Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu`
+- GitHub: `https://github.com/xiangbaqiu/xiaohongshu-yunying-laizi-x-xingqiu`
+- Local default path: `/Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu`
 
 ## Main commands
 
