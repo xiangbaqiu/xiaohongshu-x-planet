@@ -1,5 +1,7 @@
 # xiaohongshu-x-planet
 
+[中文说明](./README.zh-CN.md)
+
 OpenClaw skill for the **X/Twitter → structured data → Xiaohongshu draft → dashboard** workflow.
 
 This repository is the **skill / runbook layer**.
