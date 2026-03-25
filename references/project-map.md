@@ -2,41 +2,62 @@
 
 Project root:
 
-`/Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu`
+`/Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu`
 
 ## Main commands
 
 ### Auto collect multiple accounts
 
 ```bash
-cd /Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
 node src/auto_collect.js collect.config.json
 ```
 
 ### Generate note draft from a post bundle
 
 ```bash
-cd /Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
 node src/run_note_pipeline.js note.config.json
 ```
 
 ### Rebuild dashboard data only
 
 ```bash
-cd /Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
 node scripts/build_dashboard_data.js
 ```
 
-### Serve dashboard locally
+### Serve dashboard locally (read-only)
 
 ```bash
-cd /Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
 python3 -m http.server 8008
 ```
 
 Open:
 
 `http://127.0.0.1:8008/dashboard/index.html`
+
+### Serve dashboard locally (writable)
+
+```bash
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
+node scripts/dashboard_server.js
+```
+
+### Generate publish-ready payload
+
+```bash
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
+node scripts/create_publish_ready.js <draft_id> --prepared-by xiangbaqiu
+```
+
+### Record published result
+
+```bash
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
+node scripts/record_publish_result.js <draft_id> --published-by xiangbaqiu --platform-url https://www.xiaohongshu.com/explore/<note_id>
+```
 
 ## Important configs
 
@@ -95,11 +116,11 @@ Open:
 }
 ```
 
-### Selection bundle
+### Note bundle
 
 ```json
 {
-  "selection_id": "sel-...",
+  "bundle_id": "bundle-...",
   "theme": "AI coding",
   "bundle_strategy": "one-core-plus-supporting-posts",
   "bundle": {
@@ -137,9 +158,12 @@ Open:
 
 ```json
 {
-  "note_id": "note-...",
+  "draft_id": "draft-...",
+  "brief_id": "brief-...",
+  "bundle_id": "bundle-...",
   "theme": "AI coding",
   "style": "trend-analysis",
+  "review_status": "draft",
   "title_options": ["..."],
   "body_markdown": "...",
   "hashtags": ["#AI"],
@@ -169,11 +193,20 @@ Preferred mode: `replace_latest`
 
 ### Note outputs
 
-- `notes/selections/*.json`
+- `notes/bundles/*.json`
 - `notes/briefs/*.json`
 - `notes/drafts/*.json`
 - `notes/drafts/*.md`
+- `notes/publish-ready/*.json`
+- `notes/publish-records/*.json`
+- `notes/runs/*.json`
 
 ### Dashboard note surface
 
-`data/dashboard/dashboard-data.json` now includes a `notes` array for generated drafts, and the dashboard renders those drafts in the `生成内容` panel.
+`data/dashboard/dashboard-data.json` includes a `notes` array for generated drafts, and the dashboard renders:
+
+- generated draft content
+- explicit `review_status`
+- review annotations
+- publish-ready traceability
+- publish-record traceability
