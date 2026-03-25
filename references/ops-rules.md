@@ -8,6 +8,8 @@
 - Preserve raw batches so normalization can be re-run after rule changes
 - Generate note drafts from a post bundle, not from a single-post rewrite
 - Show generated drafts in dashboard when operators need review in one place
+- Prefer writable dashboard mode for review and publish-traceability actions
+- Treat publish-ready and publish-record as manual checkpoints, not hidden automation
 
 ## Safe change order
 
@@ -18,7 +20,8 @@ When evolving the system, prefer this order:
 3. Adjust note selection / brief / composition if needed
 4. Rebuild dashboard JSON
 5. Open dashboard for visual verification
-6. Commit changes
+6. Run review / publish-ready / publish-record actions if the task needs them
+7. Commit changes
 
 ## Common tasks
 
@@ -67,6 +70,32 @@ ls -1 notes/drafts
 ```
 
 or open dashboard and inspect the `生成内容` panel.
+
+### Open writable dashboard for review actions
+
+Run:
+
+```bash
+node scripts/dashboard_server.js
+```
+
+Use this mode when the operator needs to update review status, add annotations, generate publish-ready payloads, or record a published result.
+
+### Generate publish-ready artifact
+
+Run:
+
+```bash
+node scripts/create_publish_ready.js <draft_id> --prepared-by xiangbaqiu
+```
+
+### Record a published result
+
+Run:
+
+```bash
+node scripts/record_publish_result.js <draft_id> --published-by xiangbaqiu --platform-url https://www.xiaohongshu.com/explore/<note_id>
+```
 
 ## Non-goals for this skill
 

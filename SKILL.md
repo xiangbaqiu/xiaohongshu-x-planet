@@ -1,12 +1,12 @@
 ---
 name: xiaohongshu-x-planet
-description: Run the "小红书运营来自 X 星球" workflow as a gstack-style command runbook. Use when the user wants to: (1) collect one or more X/Twitter accounts, (2) keep the latest N posts per account with replace-latest dedupe, (3) rebuild or inspect the local operations dashboard, (4) generate a Xiaohongshu note draft from a bundle of multiple X posts, (5) show generated drafts inside the dashboard, or (6) maintain the full X → structured data → note draft → dashboard pipeline.
+description: Run the "小红书运营来自 X 星球" workflow as a gstack-style command runbook. Use when the user wants to: (1) collect one or more X/Twitter accounts, (2) keep the latest N posts per account with replace-latest dedupe, (3) rebuild or inspect the local operations dashboard, (4) generate a Xiaohongshu note draft from a bundle of multiple X posts, (5) review drafts in the writable dashboard, (6) generate publish-ready payloads, (7) record published results, or (8) maintain the full X → structured data → note draft → review → publish traceability pipeline.
 ---
 
 Use the implementation project at:
 
 - GitHub: `https://github.com/xiangbaqiu/xiaohongshu-yunying-laizi-x-xingqiu`
-- Local default path: `/Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu`
+- Local default path: `/Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu`
 
 # Runbook
 
@@ -31,7 +31,7 @@ Goal: collect multiple X accounts and keep the latest N posts per account.
 3. Run:
 
 ```bash
-cd /Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
 node src/auto_collect.js collect.config.json
 ```
 
@@ -48,7 +48,7 @@ Goal: confirm the collector met the requested target.
 Run:
 
 ```bash
-cd /Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
 wc -l data/x/accounts/*/posts.jsonl
 cat data/x/accounts/<handle>/state.json
 ```
@@ -80,25 +80,27 @@ Goal: turn a bundle of multiple X posts into one Xiaohongshu draft.
 3. Run:
 
 ```bash
-cd /Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
 node src/run_note_pipeline.js note.config.json
 ```
 
 4. Expect:
-   - `notes/selections/*.json`
+   - `notes/bundles/*.json`
    - `notes/briefs/*.json`
    - `notes/drafts/*.json`
    - `notes/drafts/*.md`
+   - `notes/runs/*.json`
 
 ## Command 4 — Verify note bundle
 
 Goal: confirm note generation used a post bundle, not a single post rewrite.
 
-Check the latest selection file. Expect:
+Check the latest bundle file. Expect:
 
 - `bundle.core_post`
 - `bundle.supporting_posts`
 - `bundle_strategy: one-core-plus-supporting-posts`
+- stable `bundle_id`
 
 Check the latest brief file. Expect:
 
@@ -113,7 +115,7 @@ Goal: refresh operator view without recollecting.
 Run:
 
 ```bash
-cd /Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
 node scripts/build_dashboard_data.js
 ```
 
@@ -124,14 +126,14 @@ Use when:
 - note drafts changed
 - raw/account data already exists
 
-## Command 6 — Open dashboard
+## Command 6 — Open read-only dashboard
 
 Goal: visually verify operator-facing output.
 
 Run:
 
 ```bash
-cd /Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
 python3 -m http.server 8008
 ```
 
@@ -149,14 +151,67 @@ Check:
 - content type filter works
 - generated note drafts render in the `生成内容` panel
 
-## Command 7 — Rebuild from existing raw
+## Command 7 — Open writable dashboard
+
+Goal: run review and publish-traceability actions from the dashboard.
+
+Run:
+
+```bash
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
+node scripts/dashboard_server.js
+```
+
+Use writable mode when the operator needs to:
+
+- move a draft into `reviewing`
+- mark `approved` / `needs_edit` / `rejected`
+- persist review annotations
+- generate publish-ready payloads
+- record published results
+
+## Command 8 — Generate publish-ready payload
+
+Goal: materialize a stable handoff artifact for an approved draft.
+
+Run:
+
+```bash
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
+node scripts/create_publish_ready.js <draft_id> --prepared-by xiangbaqiu
+```
+
+Pass criteria:
+
+- only `approved` drafts succeed
+- `notes/publish-ready/<draft_id>.json` is written
+- the dashboard can show publish-ready traceability after rebuild
+
+## Command 9 — Record published result
+
+Goal: write a publish record and move a draft into `published`.
+
+Run:
+
+```bash
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
+node scripts/record_publish_result.js <draft_id> --published-by xiangbaqiu --platform-url https://www.xiaohongshu.com/explore/<note_id>
+```
+
+Pass criteria:
+
+- `notes/publish-records/*.json` is written
+- source draft is updated to `review_status = published`
+- dashboard traceability shows publish time and external platform URL
+
+## Command 10 — Rebuild from existing raw
 
 Goal: rerun normalization without recollecting from X.
 
 Run:
 
 ```bash
-cd /Users/xiangbaqiu/.openclaw/workspace-cto-agent/xiaohongshu-yunying-laizi-x-xingqiu
+cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
 node src/run_from_raw.js samples/raw/<handle>-raw.json <handle>
 ```
 
@@ -173,6 +228,7 @@ Prefer these defaults unless the user says otherwise:
 - `mode: "replace_latest"`
 - dashboard default post filter: `original`
 - note generation uses multiple-post bundles, not single-post rewrite
+- review happens before publish-ready / publish-record steps
 - preserve raw batch files
 - preserve content typing fields
 
@@ -186,7 +242,9 @@ Do not break these guarantees:
 - replace-latest mode
 - dashboard rebuild after collection
 - generated drafts can be shown in dashboard
-- note selection remains bundle-based
+- note generation remains bundle-based
+- review status remains explicit and traceable in dashboard data
+- publish-ready / publish-record artifacts remain local-first and recoverable
 - content type values remain: `original | repost | quote | reply | unknown`
 
 # Operator schema
@@ -206,10 +264,14 @@ Keep these structures available in note generation outputs:
 
 - `bundle.core_post`
 - `bundle.supporting_posts`
+- `review_status`
+- `review_annotation`
 - `narrative_structure`
 - `title_options`
 - `body_markdown`
 - `source_posts`
+- `publish_ready`
+- `publish_record`
 
 # Escalation path
 
