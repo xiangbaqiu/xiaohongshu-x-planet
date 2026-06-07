@@ -41,6 +41,27 @@ node src/auto_collect.js collect.config.json
    - `state.json` updated
    - dashboard data rebuilt
 
+## Optional source-selection step - TweetClaw
+
+Use this only when the operator needs query-driven X/Twitter source discovery
+before the local collector runs.
+
+Install TweetClaw as a separate OpenClaw plugin:
+
+```bash
+openclaw plugins install npm:@xquik/tweetclaw
+```
+
+Use TweetClaw to search tweets, search tweet replies, look up users, export
+follower context, monitor tweets, or inspect webhook events. Then select
+reviewed handles, tweet URLs, tweet IDs, themes, or notes and put them into the
+existing `collect.config.json` and `note.config.json` flow.
+
+Keep Xquik credentials in local OpenClaw plugin settings. Do not paste
+credential values, session material, monitor payloads, or private drafts into
+prompts, issues, or public docs. TweetClaw does not replace the dashboard
+review, publish-ready, or publish-record checkpoints.
+
 ## Command 2 — Verify collection
 
 Goal: confirm the collector met the requested target.
