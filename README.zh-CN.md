@@ -14,6 +14,7 @@
 
 - 采集一个或多个 X 账号
 - 按 `replace_latest` 模式保留每个账号最新 N 条内容
+- 可选使用 OpenClaw 里的 TweetClaw 插件，先发现候选 X 账号、tweet URL、回复线程和监控主题，再编辑本地配置
 - 重建或检查本地运营 dashboard
 - 基于多条 X 内容生成一篇小红书草稿
 - 在可写 dashboard 中做审核和批注
@@ -46,6 +47,25 @@ node src/auto_collect.js collect.config.json
 cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
 node src/run_note_pipeline.js note.config.json
 ```
+
+### 可选 TweetClaw 输入筛选
+
+如果运营者需要先用搜索驱动的 X/Twitter 输入，再运行本地采集器，可以把
+TweetClaw 作为独立 OpenClaw 插件安装：
+
+```bash
+openclaw plugins install npm:@xquik/tweetclaw
+```
+
+用它搜索 tweets、搜索 tweet replies、查询用户、导出 follower context、监控
+tweets，或审核 webhook events。把这些结果只当成 source-selection 步骤：选出
+审核过的 handles、tweet URLs、tweet IDs、themes 或 notes，然后再更新这个
+skill 使用的 `collect.config.json` 和 `note.config.json`。
+
+把 Xquik credentials 保存在本地 OpenClaw plugin settings。不要把 credential
+values、session material、monitor payloads 或 private drafts 粘贴到 prompts、
+issues 或公开文档。TweetClaw 不替代这个工作流里的 dashboard review、
+publish-ready 或 publish-record checkpoints。
 
 ### 重建 dashboard 数据
 

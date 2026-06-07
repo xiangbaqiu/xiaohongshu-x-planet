@@ -16,6 +16,8 @@ It defines how an agent should operate the workflow, verify results, and hand of
 
 - Collect one or more X accounts
 - Keep the latest N posts per account with `replace_latest` dedupe
+- Optionally use TweetClaw through OpenClaw to discover candidate X accounts,
+  tweet URLs, reply threads, and monitor topics before editing local configs
 - Rebuild or inspect the local operations dashboard
 - Generate a Xiaohongshu note draft from a bundle of multiple X posts
 - Review drafts inside the writable dashboard
@@ -48,6 +50,26 @@ node src/auto_collect.js collect.config.json
 cd /Users/catchword/projects/ai/repos/skills/xiaohongshu-yunying-laizi-x-xingqiu
 node src/run_note_pipeline.js note.config.json
 ```
+
+### Optional TweetClaw intake
+
+When the operator needs search-driven X/Twitter inputs before the local
+collector runs, install TweetClaw as a separate OpenClaw plugin:
+
+```bash
+openclaw plugins install npm:@xquik/tweetclaw
+```
+
+Use it to search tweets, search tweet replies, look up users, export follower
+context, monitor tweets, or review webhook events. Treat those results as a
+source-selection step only: pick reviewed handles, tweet URLs, tweet IDs,
+themes, or notes, then update `collect.config.json` and `note.config.json` for
+this skill's existing pipeline.
+
+Keep Xquik credentials in local OpenClaw plugin settings. Do not paste
+credential values, session material, monitor payloads, or private drafts into
+prompts, issues, or public docs. TweetClaw does not replace the dashboard
+review, publish-ready, or publish-record checkpoints in this workflow.
 
 ### Rebuild dashboard
 
